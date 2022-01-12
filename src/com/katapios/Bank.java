@@ -5,7 +5,7 @@ public class Bank {
     private int numOfClients;
 
 
-    private Bank() {
+    public Bank() {
         customers = new Customer[1000];
         numOfClients = 0;
     }
