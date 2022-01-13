@@ -15,6 +15,10 @@ public class CheckingAccount extends Account {
         this(initBalance, 0);
     }
 
+    public double getOverdraftAmount() {
+        return overdraftAmount;
+    }
+
     @Override
     public boolean withdraw(double amt) {
         if (amt <= balance + overdraftAmount) {
@@ -23,4 +27,5 @@ public class CheckingAccount extends Account {
         }
         return false;
     }
+
 }

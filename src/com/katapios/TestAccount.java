@@ -19,15 +19,14 @@ public class TestAccount {
         Bank.addCustomer(secondCustomer);
 
         System.out.println(Bank.getCustomer(0));
+        System.out.println(Bank.getCustomer(1));
 
         Bank.getCustomer(0).getAccount(0).deposit(2000);
         Bank.getCustomer(0).getAccount(1).withdraw(5500);
 
         ((SavingsAccount)Bank.getCustomer(0).getAccount(0)).addInterestRate();
 
-        System.out.println(Bank.getCustomer(0).getAccount(0).getBalance());
-        System.out.println(Bank.getCustomer(0).getAccount(1).getBalance());
-
+        System.out.println(Bank.getCustomer(0));
         System.out.println(Bank.getCustomer(1));
 
     }
