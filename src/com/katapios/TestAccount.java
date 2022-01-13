@@ -3,7 +3,7 @@ package com.katapios;
 public class TestAccount {
 
     public static void main(String[] args) {
-        Bank myBank = new Bank();
+
         Customer firstCustomer = new Customer("Dennis Ryumin");
         Customer secondCustomer = new Customer("Ivan Petrov");
 
@@ -15,20 +15,20 @@ public class TestAccount {
         firstCustomer.addAccount(dennisAccount);
         secondCustomer.addAccount(ivanAccount);
 
-        myBank.addCustomer(firstCustomer);
-        myBank.addCustomer(secondCustomer);
+        Bank.addCustomer(firstCustomer);
+        Bank.addCustomer(secondCustomer);
 
-        System.out.println(myBank.getCustomer(0));
+        System.out.println(Bank.getCustomer(0));
 
-        myBank.getCustomer(0).getAccount(0).deposit(2000);
-        myBank.getCustomer(0).getAccount(1).withdraw(5500);
+        Bank.getCustomer(0).getAccount(0).deposit(2000);
+        Bank.getCustomer(0).getAccount(1).withdraw(5500);
 
-        ((SavingsAccount)myBank.getCustomer(0).getAccount(0)).addInterestRate();
+        ((SavingsAccount)Bank.getCustomer(0).getAccount(0)).addInterestRate();
 
-        System.out.println(myBank.getCustomer(0).getAccount(0).getBalance());
-        System.out.println(myBank.getCustomer(0).getAccount(1).getBalance());
+        System.out.println(Bank.getCustomer(0).getAccount(0).getBalance());
+        System.out.println(Bank.getCustomer(0).getAccount(1).getBalance());
 
-        System.out.println(myBank.getCustomer(1));
+        System.out.println(Bank.getCustomer(1));
 
     }
 }
