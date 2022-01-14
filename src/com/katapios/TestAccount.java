@@ -1,18 +1,13 @@
 package com.katapios;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 public class TestAccount {
 
     public static void main(String[] args) {
 
         Bank bank = Bank.getBank();
-        Bank otherbank = Bank.getBank();
-
-        if (bank.equals(otherbank)) {
-            System.out.println(" singleton works");
-        }else {
-            System.out.println(" not equals");
-        }
-
 
         Customer firstCustomer = new Customer("Dennis Ryumin");
         Customer secondCustomer = new Customer("Ivan Petrov");
@@ -32,7 +27,14 @@ public class TestAccount {
         System.out.println(bank.getCustomer(1));
 
         bank.getCustomer(0).getAccount(0).deposit(2000);
-        bank.getCustomer(0).getAccount(1).withdraw(5500);
+        try {
+            bank.getCustomer(0).getAccount(1).withdraw(7500);
+        } //This is our new Exception
+        catch (OverdraftException ex) {
+            System.out.println(ex.getMessage() + " $" + ex.getDeficit());
+        } catch (Exception ex) {
+            System.out.println("Something went wrong " + ex.getMessage());
+        }
 
         ((SavingsAccount)bank.getCustomer(0).getAccount(0)).addInterestRate();
 

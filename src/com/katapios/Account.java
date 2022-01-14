@@ -56,7 +56,7 @@ public class Account {
      *
      * @param amt amount of money must not be grater then ballance
      */
-    public boolean withdraw(double amt) {
+    public boolean withdraw(double amt) throws Exception {
         if (amt <= balance) {
             balance -= amt;
             return true;
