@@ -4,6 +4,16 @@ public class TestAccount {
 
     public static void main(String[] args) {
 
+        Bank bank = Bank.getBank();
+        Bank otherbank = Bank.getBank();
+
+        if (bank.equals(otherbank)) {
+            System.out.println(" singleton works");
+        }else {
+            System.out.println(" not equals");
+        }
+
+
         Customer firstCustomer = new Customer("Dennis Ryumin");
         Customer secondCustomer = new Customer("Ivan Petrov");
 
@@ -15,19 +25,19 @@ public class TestAccount {
         firstCustomer.addAccount(dennisAccount);
         secondCustomer.addAccount(ivanAccount);
 
-        Bank.addCustomer(firstCustomer);
-        Bank.addCustomer(secondCustomer);
+        bank.addCustomer(firstCustomer);
+        bank.addCustomer(secondCustomer);
 
-        System.out.println(Bank.getCustomer(0));
-        System.out.println(Bank.getCustomer(1));
+        System.out.println(bank.getCustomer(0));
+        System.out.println(bank.getCustomer(1));
 
-        Bank.getCustomer(0).getAccount(0).deposit(2000);
-        Bank.getCustomer(0).getAccount(1).withdraw(5500);
+        bank.getCustomer(0).getAccount(0).deposit(2000);
+        bank.getCustomer(0).getAccount(1).withdraw(5500);
 
-        ((SavingsAccount)Bank.getCustomer(0).getAccount(0)).addInterestRate();
+        ((SavingsAccount)bank.getCustomer(0).getAccount(0)).addInterestRate();
 
-        System.out.println(Bank.getCustomer(0));
-        System.out.println(Bank.getCustomer(1));
+        System.out.println(bank.getCustomer(0));
+        System.out.println(bank.getCustomer(1));
 
     }
 }

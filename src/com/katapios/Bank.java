@@ -1,26 +1,42 @@
 package com.katapios;
 
 public class Bank {
-    private static Customer[] customers = new Customer[1000];;
-    private static int numOfClients = 0;
+    private Customer[] customers = new Customer[1000];;
+    private int numOfClients = 0;
+    //Singleton 2 Double Checked Locking & volatile
+    private static volatile Bank instance;
+
+    public static Bank getBank() {
+        Bank localInstance = instance;
+        if (localInstance == null) {
+            synchronized (Bank.class) {
+                localInstance = instance;
+                if (localInstance == null) {
+                    instance = localInstance = new Bank();
+                }
+            }
+        }
+        return localInstance;
+    }
 
     private Bank() {
 
     }
 
-    public static  Customer getCustomer(int custNo) {
+    public Customer getCustomer(int custNo) {
         if (custNo < customers.length) {
             return customers[custNo];
         }
         return null;
     }
 
-    public static void addCustomer(Customer newCustomer) {
+    public void addCustomer(Customer newCustomer) {
         customers[numOfClients] = newCustomer;
         numOfClients++;
     }
 
-    public static int getNumOfClients() {
+    public int getNumOfClients() {
         return numOfClients;
     }
+
 }
