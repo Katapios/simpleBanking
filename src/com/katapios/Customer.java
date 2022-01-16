@@ -18,6 +18,18 @@ public class Customer {
         this.numOfAccounts = 0;
     }
 
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public int getNumOfAccounts() {
+        return numOfAccounts;
+    }
+
     public Account getAccount(int accNo) {
         if (accNo < accounts.size() && numOfAccounts != 0) {
             return accounts.get(accNo);
