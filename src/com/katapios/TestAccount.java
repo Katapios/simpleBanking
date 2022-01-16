@@ -9,8 +9,8 @@ public class TestAccount {
 
         Bank bank = Bank.getBank();
 
-        Customer firstCustomer = new Customer("Dennis Ryumin");
-        Customer secondCustomer = new Customer("Ivan Petrov");
+        Customer firstCustomer = new Customer("Dennis", "Ryumin");
+        Customer secondCustomer = new Customer("Ivan", "Petrov");
 
         SavingsAccount dennisSavings = new SavingsAccount(1000, 5);
         CheckingAccount dennisAccount = new CheckingAccount(5000, 1000);
