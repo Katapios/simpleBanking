@@ -1,6 +1,8 @@
 package com.katapios.chat;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import javax.swing.*;
 
 public class ChatClient {
@@ -30,15 +32,34 @@ public class ChatClient {
         buttonPanel.add(quitButton);
 
         frame.add(buttonPanel, BorderLayout.EAST);
-        
+        output.setEditable(false);
+
+        input.addActionListener(new SendHandler());
+        sendButton.addActionListener(new SendHandler());
+        quitButton.addActionListener((ActionEvent e) -> {
+            System.exit(0);
+        });
+
         frame.pack();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setAlwaysOnTop(true);
+        frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }
     
     public static void main(String[] args) {
          ChatClient myChat = new ChatClient();
          myChat.launchFrame();
+    }
+
+    private class SendHandler implements ActionListener{
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            String message = input.getText();
+            output.append(message+"\n");
+            input.setText("");
+        }
     }
 
 }

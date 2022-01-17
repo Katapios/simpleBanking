@@ -4,18 +4,57 @@
  */
 package com.katapios.ATM;
 
+import com.katapios.*;
+import java.awt.Component;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.JButton;
+
 /**
  *
  * @author denisrumin
  */
 public class myBankATM extends javax.swing.JFrame {
+    Bank bank;
+    Customer currentCustomer;
+    Account currentAccount;
 
     /**
      * Creates new form myBankATM
      */
     public myBankATM() {
+        
+        bank = Bank.getBank();
+
+        Customer firstCustomer = new Customer("Dennis", "Ryumin");
+        Customer secondCustomer = new Customer("Ivan", "Petrov");
+
+        SavingsAccount dennisSavings = new SavingsAccount(1000, 5);
+        CheckingAccount dennisAccount = new CheckingAccount(5000, 1000);
+        CheckingAccount ivanAccount = new CheckingAccount(500, 100);
+
+        firstCustomer.addAccount(dennisSavings);
+        firstCustomer.addAccount(dennisAccount);
+        secondCustomer.addAccount(ivanAccount);
+
+        bank.addCustomer(firstCustomer);
+        bank.addCustomer(secondCustomer);
+        
+        this.setLocationRelativeTo(null);
+        
+        this.setSize(900, 400);
+        
         initComponents();
-    }
+        
+        for (Component c : jPanel3.getComponents()){
+            if((c.getClass() == JButton.class && ((JButton) c).getText() != "ENTER")){
+                JButton currentButton = (JButton) c;
+                currentButton.addActionListener((ActionEvent e) -> {
+                    addDigit(e);
+                });
+            }
+        }
+    } 
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -42,7 +81,7 @@ public class myBankATM extends javax.swing.JFrame {
         sevenButton = new javax.swing.JButton();
         eigthButton = new javax.swing.JButton();
         nineButton = new javax.swing.JButton();
-        dumyButton = new javax.swing.JButton();
+        dotButton = new javax.swing.JButton();
         zeroButton = new javax.swing.JButton();
         enterButton = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -52,18 +91,38 @@ public class myBankATM extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("my  BAnk ATM");
         setAlwaysOnTop(true);
+        setPreferredSize(new java.awt.Dimension(801, 350));
+        setSize(new java.awt.Dimension(801, 350));
 
         jPanel1.setLayout(new java.awt.GridLayout(2, 1));
 
         jPanel2.setLayout(new java.awt.GridLayout(4, 1));
 
         balanceButton.setText("Check account balance");
+        balanceButton.setEnabled(false);
+        balanceButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                balanceButtonActionPerformed(evt);
+            }
+        });
         jPanel2.add(balanceButton);
 
         depositButton.setText("Make a deposit");
+        depositButton.setEnabled(false);
+        depositButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                depositButtonActionPerformed(evt);
+            }
+        });
         jPanel2.add(depositButton);
 
         withdrawButton.setText("Make a withdrawal");
+        withdrawButton.setEnabled(false);
+        withdrawButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                withdrawButtonActionPerformed(evt);
+            }
+        });
         jPanel2.add(withdrawButton);
         jPanel2.add(amountField);
 
@@ -99,13 +158,18 @@ public class myBankATM extends javax.swing.JFrame {
         nineButton.setText("9");
         jPanel3.add(nineButton);
 
-        dumyButton.setEnabled(false);
-        jPanel3.add(dumyButton);
+        dotButton.setText(".");
+        jPanel3.add(dotButton);
 
         zeroButton.setText("0");
         jPanel3.add(zeroButton);
 
         enterButton.setText("ENTER");
+        enterButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                enterButtonActionPerformed(evt);
+            }
+        });
         jPanel3.add(enterButton);
 
         jPanel1.add(jPanel3);
@@ -120,11 +184,73 @@ public class myBankATM extends javax.swing.JFrame {
         getContentPane().add(jScrollPane1, java.awt.BorderLayout.CENTER);
 
         statustField.setEditable(false);
-        statustField.setText("Welcome to my Bank");
+        statustField.setText("Welcome to my Bank! Please enter the client id and press Enter");
         getContentPane().add(statustField, java.awt.BorderLayout.PAGE_END);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void enterButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_enterButtonActionPerformed
+        int customerID = 0;
+        try {
+            customerID = Integer.parseInt(amountField.getText());
+            currentCustomer = bank.getCustomer(customerID);
+            currentAccount = currentCustomer.getAccount(0);
+            historyArea.append("Customer with ID = " + customerID + " is " + currentCustomer.getFirstName() + currentCustomer.getLastName() + "\n");
+            balanceButton.setEnabled(true);
+            depositButton.setEnabled(true);
+            withdrawButton.setEnabled(true);
+            enterButton.setEnabled(false);
+        } catch (Exception ex) {
+            historyArea.append("Error: Customer with ID = " + customerID + " not found\n");
+        }
+        amountField.setText("");
+        statustField.setText("customer: " + currentCustomer.getFirstName() + currentCustomer.getLastName());
+    }//GEN-LAST:event_enterButtonActionPerformed
+
+    private void balanceButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_balanceButtonActionPerformed
+
+        historyArea.append("Balance of " + currentCustomer.getFirstName() + "'s first account is $" + currentAccount.getBalance());
+        if (currentAccount instanceof CheckingAccount) {
+            historyArea.append(". this is a checking account with overdraft protection $" + ((CheckingAccount) currentAccount).getOverdraftAmount() + "\n");
+        } else {
+            historyArea.append(". this is a savings account with interest rate " + ((SavingsAccount) currentAccount).getInterestRate() + "%\n");
+        }
+        statustField.setText("READY");
+    }//GEN-LAST:event_balanceButtonActionPerformed
+
+    private void depositButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_depositButtonActionPerformed
+        try {
+            double amt = Double.parseDouble(amountField.getText());
+            currentAccount.deposit(amt);
+            historyArea.append("Deposit $" + amt + ", new balance is $" + currentAccount.getBalance() + "\n");
+            statustField.setText("READY");
+        } catch (Exception ex) {
+            historyArea.append("Error: can't complite deposite operation" + "\n");
+            statustField.setText("ERROR");
+        }
+        amountField.setText("");
+    }//GEN-LAST:event_depositButtonActionPerformed
+
+    private void withdrawButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_withdrawButtonActionPerformed
+        try {
+            double amt = Double.parseDouble(amountField.getText());
+            if (currentAccount.withdraw(amt)) {
+                historyArea.append("Deposit $" + amt + ", new balance is $" + currentAccount.getBalance() + "\n");
+                statustField.setText("READY");
+            }
+        } catch (OverdraftException ex) {
+            historyArea.append("Error: insufficent founds\n");
+        } catch (Exception ex) {
+            historyArea.append("Error: can't complite deposite operation" + "\n");
+            statustField.setText("ERROR");
+        }
+        amountField.setText("");
+    }//GEN-LAST:event_withdrawButtonActionPerformed
+
+    private void addDigit(ActionEvent evt) {
+        amountField.setText(amountField.getText() + ((JButton) evt.getSource()).getText());
+    }
 
     /**
      * @param args the command line arguments
@@ -152,7 +278,7 @@ public class myBankATM extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(myBankATM.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
-
+        
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
@@ -165,7 +291,7 @@ public class myBankATM extends javax.swing.JFrame {
     private javax.swing.JTextField amountField;
     private javax.swing.JButton balanceButton;
     private javax.swing.JButton depositButton;
-    private javax.swing.JButton dumyButton;
+    private javax.swing.JButton dotButton;
     private javax.swing.JButton eigthButton;
     private javax.swing.JButton enterButton;
     private javax.swing.JButton fiveButton;
